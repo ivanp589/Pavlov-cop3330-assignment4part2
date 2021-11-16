@@ -182,19 +182,26 @@ public class booboocontroller implements Initializable {
 
     public static HashMap<String, AddList> TABSandTheirLists = new HashMap<String,AddList>();
     public static Tab currentTab;
+//    public TableView<Items> editableTable = currentTab.getContent().isPressed();
 
-    public Tab CreateNewTab(){
-        int x =0;//need to make global
-        Tab NewestTab = new Tab("Tab "+x);
-        x++;
-        AddList Hist = new AddList(NewestTab.getText(),FXCollections.observableArrayList());
-        TABSandTheirLists.put(NewestTab.getText(),Hist);
-        Hist.AddAnItem(new Items("Descriptions",LocalDate.of(2021,9,13),false));
 
-        NewestTab.setContent(createNewNode(Hist.TabList));
 
-        return NewestTab;
+    public void editTable(){
+
     }
+
+//    public Tab CreateNewTab(){
+//        int x =0;//need to make global
+//        Tab NewestTab = new Tab("Tab "+x);
+//        x++;
+//        AddList Hist = new AddList(NewestTab.getText(),FXCollections.observableArrayList());
+//        TABSandTheirLists.put(NewestTab.getText(),Hist);
+//        Hist.AddAnItem(new Items("Descriptions",LocalDate.of(2021,9,13),false));
+//
+//        NewestTab.setContent(createNewNode(Hist.TabList));
+//
+//        return NewestTab;
+//    }
 
     public ObservableList<Items> getCurrentList(){
         String CurrentTabName = currentTab.getText();//gets the name of the tab
@@ -213,6 +220,10 @@ public class booboocontroller implements Initializable {
 
     public Node createNewNode(ObservableList<Items> LIST){
         TableView newTable = new TableView<Items>();
+        newTable.setId(String.valueOf("Tab"+TABSandTheirLists.size()));
+        newTable.setEditable(true);
+//        newTable.addEventHandler(SingleSelectionModel<Items>(
+//                ) );
 
 
         TableColumn comp = new TableColumn<Items,Boolean>("Completed:");//following code sets up the table
@@ -378,7 +389,13 @@ public class booboocontroller implements Initializable {
         newtab.setText("Tab "+X);//let the title of the tab be the name of the list we will be updating
         newtab.setContent(NewNode);
         AddList NewestList = new AddList(newtab.getText(),newList);
-        newList.add(add());
+        Items adder = add();
+        NewestList.AddAnItem(adder);
+//        NewestList.AddAnItem(adder);
+//        out.println(NewestList.getTabList().get(0).getDate());
+//            boolean vel =NewestList.getTabList().contains(adder);
+//            out.println(String.format("does tablist contain the value? "+vel));
+    //        newList.add(add());
         TABSandTheirLists.put(newtab.getText(),NewestList);
         Tabpane.getTabs().add(newtab);
         currentTab = newtab;
@@ -391,6 +408,7 @@ public class booboocontroller implements Initializable {
         //store this list name as the name of the list in ListData
         //setListName();
         //CALL saveCurrentList()
+
     }
 
     @FXML
@@ -405,9 +423,16 @@ public class booboocontroller implements Initializable {
         //store this item for removal
         //remove this item
         //leave all other items untouched
-        Items item = tableView.getSelectionModel().getSelectedItem();
-        getCurrentList().remove(item);
+        if(Tabpane.getTabs().contains(currentTab)){
+//            int i=0;//safe to delete
+//            while(currentTab!= Tabpane.getTabs().get(i)){
+//                i++;
+//            }
+            TableView<Items> items = (TableView<Items>) currentTab.getContent();
 
+            Items item = items.getSelectionModel().getSelectedItem();//tableView.getSelectionModel().getSelectedItem();
+            TABSandTheirLists.get(currentTab.getText()).RemoveAnItem(item);
+        }
     }
 
     //following code is simplified to make this file smaller

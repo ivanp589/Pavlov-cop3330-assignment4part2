@@ -13,9 +13,9 @@ import java.util.HashMap;
  */
 
 public class AddList {
-public String TabName;
+public static String TabName;
 public static ObservableList<Items> TabList;
-public ObservableList<Items> completeList;
+public static ObservableList<Items> completeList;
 public static ObservableList<Items> incompleteList;
 
 
@@ -40,7 +40,17 @@ public static ObservableList<Items> incompleteList;
 
     }}
 
-    public void AddAnItem(Items ItemToAdd){
+    public void RemoveAnItem(Items ItemToRemove){
+        this.TabList.remove(ItemToRemove);
+        if(ItemToRemove.Complete==false){
+            this.incompleteList.remove(ItemToRemove);
+        }
+        else{
+            this.completeList.remove(ItemToRemove);
+        }
+    }
+
+    public  static void AddAnItem(Items ItemToAdd){
         TabList.add(ItemToAdd);
         if(ItemToAdd.Complete==true){
             completeList.add(ItemToAdd);
