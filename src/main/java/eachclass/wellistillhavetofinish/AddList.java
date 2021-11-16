@@ -60,6 +60,10 @@ public static ObservableList<Items> incompleteList;
         }
     }
 
+    public void RenameList(String input){
+        this.TabName = input;
+    }
+
     public void newList(String Name){
         this.TabName = Name;
         this.TabList = FXCollections.observableArrayList();

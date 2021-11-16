@@ -16,14 +16,16 @@
                 <Menu mnemonicParsing="false" text="File">
                     <items>
                         <MenuItem fx:id="close" mnemonicParsing="false" onAction="#CloseList" text=" Close list" />
-                        <MenuItem mnemonicParsing="false" onAction="#CreateNewList" text="New List" />
+                  <MenuItem fx:id="saveall" mnemonicParsing="false" text="Save All Lists" onAction="#SaveAllOpenLists"/>
+                  <MenuItem fx:id="save" mnemonicParsing="false" text="Save List" onAction="#SaveCurrentList"/>
+                        <MenuItem fx:id="newlist" mnemonicParsing="false" onAction="#CreateNewList" text="New List" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#openList" text="Open list" />
-                        <MenuItem mnemonicParsing="false" onAction="#removeItemFromList" text="Delete item" />
-                        <MenuItem mnemonicParsing="false" onAction="#RenameList" text="Rename list" />
+                        <MenuItem fx:id="open" mnemonicParsing="false" onAction="#openList" text="Open list" />
+                        <MenuItem fx:id="delete" mnemonicParsing="false" onAction="#removeItemFromList" text="Delete item" />
+<!--                        <MenuItem mnemonicParsing="false" onAction="#RenameList" text="Rename list" />-->
                     </items>
                 </Menu>
             </menus>

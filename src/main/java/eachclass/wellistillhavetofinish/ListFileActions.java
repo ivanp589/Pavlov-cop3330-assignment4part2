@@ -1,8 +1,14 @@
 package eachclass.wellistillhavetofinish;
 
 import javafx.fxml.FXML;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Scanner;
 
 /**
  *  UCF COP3330 Fall 2021 Assignment 4 Solution
@@ -10,6 +16,7 @@ import java.io.File;
  */
 
 public class ListFileActions extends booboocontroller {
+    private Window stage;
 
     // all methods have something to do
     // with the file aspect of the project
@@ -27,18 +34,20 @@ public class ListFileActions extends booboocontroller {
     //call addItem with string parameters in ListfxmlFileController
     //end while
     public void importFromFile(File file) {
-//        Scanner in = null;
-//        try {
-//            in = new Scanner(file);
-//            while (in.hasNextLine()){
-//                String line = in.nextLine();
-//                String[] split = line.split(",");
-//
-//                addItem(split[0],split[1],split[2]);
-//            }
-//        } catch (FileNotFoundException | ParseException e) {
-//            e.printStackTrace();
-//        }
+        Scanner in = null;
+        try {
+            in = new Scanner(file);
+            while (in.hasNextLine()){
+                String line = in.nextLine();
+                String[] split = line.split(",");
+//                AddList.AddAnItem(split[0],split[1],split[2]);
+                addItem(split[0],split[1],split[2]);
+            }
+        } catch (FileNotFoundException | ParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -47,12 +56,12 @@ public class ListFileActions extends booboocontroller {
 //        //open file picker
 //        //choose list you would like to open
 //        //import the list from the file you would like to open
-//        FileChooser chooser = new FileChooser();
-//        chooser.setTitle("Select a file");
-//        File file = chooser.showOpenDialog(stage);
-//        if(file != null){
-//            importFromFile(file);
-//        }
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Select a file");
+        File file = chooser.showOpenDialog(stage);
+        if(file != null){
+            importFromFile(file);
+        }
     }
 
     @FXML

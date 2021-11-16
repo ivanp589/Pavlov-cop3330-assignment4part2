@@ -2,7 +2,6 @@ package eachclass.wellistillhavetofinish;
 
 
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -16,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.FlowPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -27,7 +25,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import static eachclass.wellistillhavetofinish.AddList.*;
 import static java.lang.System.out;
 
 /**
@@ -40,63 +37,26 @@ public class booboocontroller implements Initializable {
 //    public static ObservableList<Item> lister;//lister is the global list name,
     // each list gets its own individual list name which lister than stores
 
-    Stage stage;
-    public static AddList bist;
-
     @FXML public TableView<Items> tableView= new TableView<>();
-
-//    @FXML public TableColumn<Items,Boolean> CompColumn;
-//
-//    @FXML public TableColumn<Items, LocalDate> DateColumn;
-//
-//    @FXML public TableColumn<Items,String> DescColumn;
 
     @FXML public TabPane Tabpane = new TabPane();
     @FXML public CheckBox Complete;
     @FXML public CheckBox Incomplete;
 
 
-
-    //find the number of initially open tabs
-    //for(i=0; i < tabs open;i++)
-    //store the  name of each tab
-    //create an emptylist for each tab
-    //add an element to the hashmap for each tab
-    //end for
-//    public void makeMapOfLists(){//creates a todolist list
-//        int size = Tabpane.getTabs().size();
-//
-//        for(int i=0;i<size;i++){
-//            String listName = Tabpane.getTabs().get(i).getText();
-//            ObservableList<Items> list= FXCollections.observableArrayList();
-//
-////            new AddList(listName,list);
-//        }
-//    }
-
-    //determine the tab that is currently being viewed
-    //return the observable list located in the hashMap
-//    public ObservableList<Items> getCurrentListnotworking(){
-//        Tab currentTab = Tabpane.getTabs().get(Tabpane.getTabs().size());
-////        Tab currentTab = determineTab();
-//
-//        String Tabname = currentTab.getText();
-//        out.println(Tabname);//line to see if the tab is properly identified
-//
-//        return bist.getMap().get(Tabname);
-//    }
-
-
-
     //parse the sent string
     //create a new item with the parsed values
     //add the item to the current list
-    public void addItem(String s, String s1, String s2) throws ParseException {
+    public void addItem(String s, String s1, String s2) throws ParseException, IOException {
         LocalDate day = null;
         day = LocalDate.parse(s1);
         Boolean complete = Boolean.parseBoolean(s2);
         Items addItem = new Items(s,day,complete);
-        getCurrentList().add(addItem);
+        CreateNewList();
+        out.println(currentTab.getText());
+        out.println(Tabpane.getTabs().size());
+        TABSandTheirLists.get(currentTab.getGraphic().toString()).AddAnItem(addItem);
+
     }
 
     @FXML
@@ -114,7 +74,7 @@ public class booboocontroller implements Initializable {
 //            out.println(currentTab.getText());
             out.println("is null? ");
             out.println((currentTab ==null));
-            out.println(currentTab.getText());
+            out.println(currentTab.getGraphic().toString());
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("AddingScene.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage= new Stage();
@@ -129,14 +89,6 @@ public class booboocontroller implements Initializable {
         } catch (IOException e) {e.printStackTrace();return -1;}
     }
 
-    //initialize the TabPane
-    //make a hashMap of all open Lists
-//    public void ListfxmlFileConteroller() {
-//        bist = new AddList();
-//        Tabpane = new TabPane();
-//        makeMapOfLists();
-//    }
-
 
     //get the item that is passed to this function and add it to the list
     //determine list that is open
@@ -144,9 +96,7 @@ public class booboocontroller implements Initializable {
     //end
 //    @FXML
     public static void receiveData(Items u) {
-//        currentTab = Tabpane.getSelectionModel().getSelectedItem();
-        TABSandTheirLists.get(currentTab.getText()).AddAnItem(u);
-        out.println(currentTab.getText());
+        TABSandTheirLists.get(currentTab.getGraphic().toString()).AddAnItem(u);
     }
 
 
@@ -169,11 +119,7 @@ public class booboocontroller implements Initializable {
             }
         });
 
-//        Tab blew = CreateNewTab();
-//        currentTab = blew;
-//        Tabpane.getTabs().add(blew);
-//        out.println(Tabpane==null);
-//        booboocontroller.Tabpane.getTabs().add(blew);
+
 
 
 
@@ -181,31 +127,14 @@ public class booboocontroller implements Initializable {
 
     //test code start
 
-    public static HashMap<String, AddList> TABSandTheirLists = new HashMap<String,AddList>();
-    public static Tab currentTab;
-//    public TableView<Items> editableTable = currentTab.getContent().isPressed();
+    public static HashMap<String, AddList> TABSandTheirLists = new HashMap<String,AddList>();//staticmap of tab and their corresponding lists
+    public static Tab currentTab;   //keeps track of the tab that is currently open
 
-
-
-    public void editTable(){
-
-    }
-
-//    public Tab CreateNewTab(){
-//        int x =0;//need to make global
-//        Tab NewestTab = new Tab("Tab "+x);
-//        x++;
-//        AddList Hist = new AddList(NewestTab.getText(),FXCollections.observableArrayList());
-//        TABSandTheirLists.put(NewestTab.getText(),Hist);
-//        Hist.AddAnItem(new Items("Descriptions",LocalDate.of(2021,9,13),false));
-//
-//        NewestTab.setContent(createNewNode(Hist.TabList));
-//
-//        return NewestTab;
-//    }
-
+    //employ currenTab
+    //get the list associated with the name of the current tab
+    //return this list
     public ObservableList<Items> getCurrentList(){
-        String CurrentTabName = currentTab.getText();//gets the name of the tab
+        String CurrentTabName = currentTab.getGraphic().toString();//gets the name of the tab
 
         //name of the tab can be used to find the tab in the map list
         ObservableList<Items> CurrentList =  TABSandTheirLists.get(CurrentTabName).getTabList();//mapOfTabAndItems.get(CurrentTabName);//current list is null
@@ -214,18 +143,14 @@ public class booboocontroller implements Initializable {
     }
 
 
-    public Items add(){
-        return new Items("flank",LocalDate.of(2021,9,13),true);
 
-    }
-
+    //creates the node that will subsequently populate each new tab created
     public Node createNewNode(ObservableList<Items> LIST){
         TableView newTable = new TableView<Items>();
         newTable.setId(String.valueOf("Tab"+TABSandTheirLists.size()));
-        newTable.setEditable(true);
-//        newTable.addEventHandler(SingleSelectionModel<Items>(
-//                ) );
 
+
+        newTable.setEditable(true);
 
         TableColumn comp = new TableColumn<Items,Boolean>("Completed:");//following code sets up the table
         comp.setPrefWidth(75.00);
@@ -240,6 +165,31 @@ public class booboocontroller implements Initializable {
         desc.setCellValueFactory(new PropertyValueFactory<>("Desc"));
         date.setCellValueFactory(new PropertyValueFactory<>("Date"));
         comp.setCellValueFactory(new PropertyValueFactory<>("Complete"));
+        Label label = new Label();
+
+        final TextField textField = new TextField();
+        TextField tstField = new TextField();
+        newTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getClickCount()==2) {
+                    textField.setText(label.getText());
+                    out.println(newTable.getEditingCell());
+                        textField.selectAll();
+                    textField.requestFocus();
+
+                }
+            }
+        });
+
+
+        textField.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                label.setText(textField.getText());
+//                newTable.setGraphic(label);
+            }
+        });
 
 
         newTable.setItems(LIST);
@@ -254,8 +204,10 @@ public class booboocontroller implements Initializable {
     //set checkboxes off.       //to not confuse the user
     //end
     @FXML void Refresher(){
+        Complete.setSelected(false);
+        Incomplete.setSelected(false);
         Tab CurrentTab = currentTab;//determineCurrentTab();
-        ObservableList<Items> ThisList = TABSandTheirLists.get(CurrentTab.getText()).getTabList();
+        ObservableList<Items> ThisList = TABSandTheirLists.get(CurrentTab.getGraphic().toString()).getTabList();
         currentTab.setContent(createNewNode(ThisList));
     }
 
@@ -290,25 +242,6 @@ public class booboocontroller implements Initializable {
     }
 
 
-    //all code after may have to be edited to work properly
-
-//    public ObservableList<Items> getCompleted(){
-//        //create a newItemList and populate it only with completed items
-//        //for(i=0,i<sizeof( original list );i++)
-//        //if(originalList.get(i).getComplete() == true)
-//        //newItemList.add(original list element i)
-//        //else continue
-//        //return newItemList
-//        ObservableList<Items> completeList= FXCollections.observableArrayList();
-//        int size = getCurrentList().size();
-//        for(int i=0; i<size;i++){
-//            ObservableList<Items> current = getCurrentList();
-//            if(current.get(i).Complete == true){
-//                completeList.add(current.get(i));
-//            }
-//        }
-//        return completeList;
-//    }
     @FXML
     public void showCompleted(){
         //check if both checkboxes are on
@@ -322,28 +255,12 @@ public class booboocontroller implements Initializable {
         }
         else if(Complete.isSelected()){
             Tab currentab = currentTab;//determineCurrentTab();
-            ObservableList<Items> ThisList = TABSandTheirLists.get(currentab.getText()).getCompleteList();
+            ObservableList<Items> ThisList = TABSandTheirLists.get(currentab.getGraphic().toString()).getCompleteList();
             currentTab.setContent(createNewNode(ThisList));
         }
 
     }
-//    public ObservableList<Items> getIncomplete(){
-//        //create a newItemList and populate it with only incomplete items
-//        //for(i=0,i<sizeof(originalList);i++)
-//        //if(originalList.get(i).getComplete() == false)
-//        //newItem.add(original list element i)
-//        //else continue
-//        //return newItemList
-//        ObservableList<Items> incompleteList= FXCollections.observableArrayList();
-//        int size = getCurrentList().size();
-//        for(int i=0; i<size;i++){
-//            ObservableList<Items> current = getCurrentList();
-//            if(current.get(i).Complete == false){
-//                incompleteList.add(current.get(i));
-//            }
-//        }
-//        return incompleteList;
-//    }
+
 
     public void showIncomplete(){   //show incomplete checkbox triggers this
         //set the other checkbox to off or false
@@ -356,7 +273,7 @@ public class booboocontroller implements Initializable {
         }
         else if(Incomplete.isSelected()) {
             Tab currentab = currentTab;//determineCurrentTab();
-            ObservableList<Items> ThisList = TABSandTheirLists.get(currentab.getText()).getIncompleteList();
+            ObservableList<Items> ThisList = TABSandTheirLists.get(currentab.getGraphic().toString()).getIncompleteList();
             currentTab.setContent(createNewNode(ThisList));
         }
     }
@@ -392,6 +309,13 @@ public class booboocontroller implements Initializable {
 
 
         newtab.setGraphic(label);
+
+        newtab.setContent(NewNode);
+//        out.println(newtab.getGraphic().toString());
+        AddList NewestList = new AddList(newtab.getGraphic().toString(),newList);
+//        Items adder = add();
+//        NewestList.AddAnItem(adder);
+//        out.println(newtab.getGraphic().toString());
         final TextField textField = new TextField();
         TextField tstField = new TextField();
         label.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -402,6 +326,7 @@ public class booboocontroller implements Initializable {
                     newtab.setGraphic(textField);
                     textField.selectAll();
                     textField.requestFocus();
+
                 }
             }
         });
@@ -415,42 +340,10 @@ public class booboocontroller implements Initializable {
             }
         });
 
-
-
-
-
-
-//        out.println(newtab);
-        newtab.setContent(NewNode);
-        AddList NewestList = new AddList(newtab.getText(),newList);
-        Items adder = add();
-        NewestList.AddAnItem(adder);
-//        NewestList.AddAnItem(adder);
-//        out.println(NewestList.getTabList().get(0).getDate());
-//            boolean vel =NewestList.getTabList().contains(adder);
-//            out.println(String.format("does tablist contain the value? "+vel));
-    //        newList.add(add());
-        TABSandTheirLists.put(newtab.getText(),NewestList);
+        NewestList.RenameList(label.getText());
+        TABSandTheirLists.put(newtab.getGraphic().toString(),NewestList);
         Tabpane.getTabs().add(newtab);
         currentTab = newtab;
-
-    }
-
-    @FXML
-    void RenameList(ActionEvent event){
-        //open a new window which asks for a new list name
-        //store this list name as the name of the list in ListData
-        //setListName();
-        //CALL saveCurrentList()
-
-
-            Tab workspaceTab = new Tab();
-            workspaceTab.setText("New Workspace");
-            Tabpane.getTabs().addAll(workspaceTab);
-            Tabpane.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
-
-
-
 
     }
 
@@ -474,7 +367,7 @@ public class booboocontroller implements Initializable {
             TableView<Items> items = (TableView<Items>) currentTab.getContent();
 
             Items item = items.getSelectionModel().getSelectedItem();//tableView.getSelectionModel().getSelectedItem();
-            TABSandTheirLists.get(currentTab.getText()).RemoveAnItem(item);
+            TABSandTheirLists.get(currentTab.getGraphic().toString()).RemoveAnItem(item);
         }
     }
 
