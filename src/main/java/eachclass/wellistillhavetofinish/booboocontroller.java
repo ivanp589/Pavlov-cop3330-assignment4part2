@@ -146,6 +146,7 @@ public class booboocontroller implements Initializable {
     public static void receiveData(Items u) {
 //        currentTab = Tabpane.getSelectionModel().getSelectedItem();
         TABSandTheirLists.get(currentTab.getText()).AddAnItem(u);
+        out.println(currentTab.getText());
     }
 
 
@@ -386,7 +387,40 @@ public class booboocontroller implements Initializable {
 
         Node NewNode = createNewNode(newList);
         Tab newtab = new Tab();
-        newtab.setText("Tab "+X);//let the title of the tab be the name of the list we will be updating
+        Label label = new Label("Tab "+X);//let the title of the tab be the name of the list we will be updating
+
+
+
+        newtab.setGraphic(label);
+        final TextField textField = new TextField();
+        TextField tstField = new TextField();
+        label.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getClickCount()==2) {
+                    textField.setText(label.getText());
+                    newtab.setGraphic(textField);
+                    textField.selectAll();
+                    textField.requestFocus();
+                }
+            }
+        });
+
+
+        textField.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                label.setText(textField.getText());
+                newtab.setGraphic(label);
+            }
+        });
+
+
+
+
+
+
+//        out.println(newtab);
         newtab.setContent(NewNode);
         AddList NewestList = new AddList(newtab.getText(),newList);
         Items adder = add();
@@ -403,11 +437,20 @@ public class booboocontroller implements Initializable {
     }
 
     @FXML
-    void RenameList(){
+    void RenameList(ActionEvent event){
         //open a new window which asks for a new list name
         //store this list name as the name of the list in ListData
         //setListName();
         //CALL saveCurrentList()
+
+
+            Tab workspaceTab = new Tab();
+            workspaceTab.setText("New Workspace");
+            Tabpane.getTabs().addAll(workspaceTab);
+            Tabpane.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
+
+
+
 
     }
 
