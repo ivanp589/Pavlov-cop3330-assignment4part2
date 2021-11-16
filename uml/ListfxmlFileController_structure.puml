@@ -2,14 +2,14 @@
 
 class ListfxmlFileController implements Initializable{
 '+ObservableList<Item> lister
-+Stage stage
+'+Stage stage
 '+ToDoList newlist
-+AddList bist
-+ListfxmlFileConteroller()
+'+AddList bist
+'+ListfxmlFileConteroller()
 +TableView<Item> tableView
-+TableColumn<Item,Boolean> CompColumn
-+TableColumn<Item, LocalDate> DateColumn
-+TableColumn<Item,String> DescColumn
+'+TableColumn<Item,Boolean> CompColumn
+'+TableColumn<Item, LocalDate> DateColumn
+'+TableColumn<Item,String> DescColumn
 +TabPane Tabpane
 +CheckBox Complete
 +CheckBox Incomplete
@@ -19,18 +19,23 @@ class ListfxmlFileController implements Initializable{
 +addItem()
 +ListfxmlFileConteroller
 +determineTab()
-+getCompleted()
+'+getCompleted()
 +showCompleted()
-+getIncomplete()
+'+getIncomplete()
 +showIncomplete()
 +CloseList()
 +CreateNewList()
-+RenameList()
+'+RenameList()
 +clearList()
 +removeItemFromList()
 +openList()
 +SaveCuurentList()
 SaveAllOpenLists()
+
+
+
+
++createNewNode()
 
 
 
@@ -59,17 +64,18 @@ ListfxmlFileController-- editDueDate
 ListfxmlFileController-- editIsComplete
 'ListfxmlFileController-- setItem
 
+ListfxmlFileController--createNewNode
 ListfxmlFileController--makeMapOfLists
 ListfxmlFileController--getCurrentList
 ListfxmlFileController--addItem
 ListfxmlFileController-- determineTab
-ListfxmlFileController--getCompleted
+'ListfxmlFileController--getCompleted
 ListfxmlFileController--showCompleted
-ListfxmlFileController--getIncomplete
+'ListfxmlFileController--getIncomplete
 ListfxmlFileController--showIncomplete
 ListfxmlFileController--CloseList
 ListfxmlFileController--CreateNewList
-ListfxmlFileController-- RenameList
+'ListfxmlFileController-- RenameList
 ListfxmlFileController--clearList
 ListfxmlFileController-- removeItemFromList
 ListfxmlFileController--openList
